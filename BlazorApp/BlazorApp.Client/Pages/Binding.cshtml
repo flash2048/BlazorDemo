@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Blazor.Browser.Interop
+@inject HttpClient Http;
+
+@page "/binding"
+<h1>Привязка данных</h1>
+
+<p>Имя: <b>@firstName</b></p>
+<p>Фамилия: <b>@lastName </b></p>
+<p>Возраст: <b>@age</b></p>
+<div class="panel panel-primary">
+    <div class="panel-heading">Заполните данные</div>
+    <br />
+    <p>Имя: <input type="text" @bind(firstName) /></p>
+    <p>Фамилия: <input type="text" @bind(lastName) /></p>
+    <p>Возраст: <input type="range" min="18" max="110" @bind(age)></p>
+</div>
+
+<div>
+    <button type="button" class="btn btn-danger btn-xs" @onclick(() => Decrement(ref intValue1))>
+        <b>-</b>
+    </button>
+    <input type="number" @bind(intValue1) />
+    <button type="button" class="btn btn-success btn-xs" @onclick(() => Increment(ref intValue1))>
+        <b>+</b>
+    </button>
+</div>
+
+<div>
+    <br/>
+    <input type="text" @bind(text) />
+    <button type="button" class="btn btn-success btn-xs" @onclick(() => ShowMessage(text))>
+        Alert из JS
+    </button>
+</div>
+
+<script>
+    Blazor.registerFunction('ShowMessage', message => {
+        if (message == undefined || message == "") { 
+            alert("Введите сообщение");
+            return;
+        }
+        alert(message);
+    });
+</script>
+
+@functions {
+string firstName = "";
+string lastName = "";
+string age = "";
+string text = "";
+int intValue1 = 2048;
+
+void Increment(ref int value)
+{
+    value++;
+}
+void Decrement(ref int value)
+{
+    value--;
+}
+string ShowMessage(string message)
+{
+    return RegisteredFunction.Invoke<string>("ShowMessage", message);
+}
+
+}

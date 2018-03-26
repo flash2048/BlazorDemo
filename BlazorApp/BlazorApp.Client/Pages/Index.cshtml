@@ -1,0 +1,28 @@
+﻿@page "/"
+@using org.mariuszgromada.math.mxparser;
+
+<h1>Blazor пример!</h1>
+Вы можете увидеть несколько простых примеров использования Blazor.
+<p>На странице <a href="/binding">Привязка данных</a> можете увидеть то, как можно связывать данные. На странице <a href="/todo">ToDo</a> можно увидеть пример реализованного ToDo-листа.</p>
+
+
+@*<SurveyPrompt Title="How is Blazor working for you?" />*@
+
+На данной странице, вы можете увидеть пример подключения обычной <b>.dll</b> библиотеки для использования, на примере <b>mXparser</b>. Он был загружен из <b>Nuget</b>. <br />
+Используется для вычисления математических выражений. Запишите выражение для вычисления (список доступных опереций можно посмотреть <a href="http://mathparser.org/" target="_blank">здесь</a>):<br />
+Например, <b>5!+17+2/8 = 137.25</b> <br />
+<input type="text" style="width:35%;" @onchange(value => MathIt(value)) /> = <b>@result</b>
+
+@functions {
+    string result = "";
+    void MathIt(object text)
+    {
+        Console.WriteLine(text);
+        var str = (string)text;
+        if (!string.IsNullOrEmpty(str))
+        {
+            var x = new Expression(str);
+            result = x.calculate().ToString();
+        }
+    }
+}

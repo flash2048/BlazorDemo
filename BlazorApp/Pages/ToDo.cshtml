@@ -1,0 +1,60 @@
+﻿@page "/todo"
+@using BlazorApp.Models
+
+<h1>ToDo лист</h1>
+<p>Всего - <b>@todos.Count()</b>, сделано - <b>@todos.Count(x=>x.IsCheck)</b>, нужно сделать - <b>@todos.Count(x=>!x.IsCheck)</b></p>
+<input type="text" bind="@name" placeholder="Title..." style="width: 50%;"/>
+<button type="button" class="btn btn-success" onclick="@AddItem">
+    Добавить
+</button>
+
+@{
+    foreach (ToDoModel item in todos)
+    {
+    <div>
+        <h2>
+            <span style="@string.Format("{0}", item.IsCheck ? "text-decoration: line-through;" : "")">@item.Name</span>
+            <button type="button" class="btn btn-@string.Format("{0}", item.IsCheck ? "warning" : "info") btn-xs" onclick="@(() => Isdone(item))">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> @string.Format("{0}", item.IsCheck ? "Не выполнено" : "Выполнено")
+            </button>
+            <button type="button" class="btn btn-danger btn-xs" onclick="@(() => RemoveItem(item))">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Удалить
+            </button>
+        </h2>
+
+    </div>
+    }
+}
+
+@functions {
+List<ToDoModel> todos = new List<ToDoModel>() { new ToDoModel { Name = "Правка багов для Blazor" }, new ToDoModel { Name = "Сделать обзор на Blazor", IsCheck = true } };
+
+string name = string.Empty;
+
+void AddItem()
+{
+    if (!string.IsNullOrEmpty(name))
+    {
+        var newItem = new ToDoModel { Name = name };
+        todos.Insert(0, newItem);
+        name = string.Empty;
+    }
+}
+
+void RemoveItem(ToDoModel item)
+{
+    if (item != null)
+    {
+        todos.Remove(item);
+    }
+}
+void Isdone(ToDoModel item)
+{
+    if (item != null)
+    {
+        item.IsCheck = !item.IsCheck;
+
+        todos = todos.OrderBy(x => x.IsCheck).ToList();
+    }
+}
+}

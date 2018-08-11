@@ -1,0 +1,82 @@
+﻿@inject HttpClient Http;
+
+@page "/binding"
+<h1>Привязка данных</h1>
+
+<p>Имя: <b>@firstName</b></p>
+<p>Фамилия: <b>@lastName </b></p>
+<p>Возраст: <b>@age</b></p>
+<div class="card">
+    <div class="card-header">Заполните данные</div>
+    <br />
+    <div class="card-body">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    Имя:
+                </div>
+                <div class="col-10">
+                    <input type="text" bind="@firstName" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Фамилия:
+                </div>
+                <div class="col-10">
+                    <input type="text" bind="@lastName" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Возраст:
+                </div>
+                <div class="col-10">
+                    <input type="range" min="18" max="110" bind="@age" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <button type="button" class="btn btn-danger btn-xs" onclick="@(() => Decrement(ref intValue1))">
+        <b>-</b>
+    </button>
+    <input type="number" bind="@intValue1" />
+    <button type="button" class="btn btn-success btn-xs" onclick="@(() => Increment(ref intValue1))">
+        <b>+</b>
+    </button>
+</div>
+
+<div>
+    <br />
+    <input type="text" bind="@text" />
+    <button type="button" class="btn btn-success btn-xs" onclick="@(()=>ShowMessage(text))">
+        Alert из JS
+    </button>
+</div>
+
+@functions {
+string firstName = "";
+string lastName = "";
+string age = "";
+string text = "";
+int intValue1 = 2048;
+
+void Increment(ref int value)
+{
+    value++;
+}
+void Decrement(ref int value)
+{
+    value--;
+}
+Task<string> ShowMessage(string message)
+{
+    return JSRuntime.Current.InvokeAsync<string>(
+            "alert",
+            message);
+}
+
+}

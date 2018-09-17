@@ -15,7 +15,7 @@
 string result = "";
 void MathIt(UIChangeEventArgs text)
 {
-    Console.WriteLine(text);
+    Console.WriteLine(text.Value);
     var str = (string)text.Value;
     if (!string.IsNullOrEmpty(str))
     {
